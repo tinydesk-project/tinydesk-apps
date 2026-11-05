@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.tdapp binary
+*.ppm binary
+*.mpy binary

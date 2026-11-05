@@ -1,0 +1,5 @@
+{
+  "title": "Instrument panel",
+  "summary": "Dials, bars and readouts on a large pixel canvas. Needs a board with PSRAM.",
+  "category": "Examples"
+}

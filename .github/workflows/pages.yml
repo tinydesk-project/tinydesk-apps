@@ -1,0 +1,37 @@
+name: GitHub Pages
+
+# Publishes the catalog (index.json, catalog.txt) and the packages, which
+# TinyDesk's Store app downloads from
+# https://tinydesk-project.github.io/tinydesk-apps/. Settings -> Pages ->
+# Source must be "GitHub Actions".
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/make_index.py --out site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

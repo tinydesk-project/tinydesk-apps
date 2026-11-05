@@ -1,0 +1,170 @@
+{
+ "version": 1,
+ "name": "instrument_panel",
+ "screen": {
+  "w": 80,
+  "h": 24
+ },
+ "board": 32000,
+ "theme": "dark",
+ "windows": [
+  {
+   "id": "window_1",
+   "name": "win",
+   "title": "Instrument panel",
+   "w": 80,
+   "h": 24,
+   "x": null,
+   "y": null,
+   "resizable": true,
+   "fullscreen": true,
+   "events": {},
+   "timers": [],
+   "widgets": [
+    {
+     "id": "panel",
+     "type": "canvas",
+     "name": "panel",
+     "x": 0,
+     "y": 0,
+     "w": 80,
+     "h": 24,
+     "text": "",
+     "checked": false,
+     "secret": false,
+     "value": 65,
+     "fg": -1,
+     "bg": 17,
+     "visible": true,
+     "events": {},
+     "page": "main",
+     "goToPage": null,
+     "items": [
+      "First item",
+      "Second item",
+      "Third item"
+     ],
+     "paint": [
+      {
+       "op": "rect",
+       "x": 0,
+       "y": 0,
+       "w": 160,
+       "h": 48,
+       "color": 17,
+       "radius": 0,
+       "outline": false
+      },
+      {
+       "op": "put",
+       "x": 2,
+       "y": 1,
+       "text": "INSTRUMENT PANEL / SIMULATED",
+       "fg": 231,
+       "bg": 17
+      },
+      {
+       "op": "gauge",
+       "x": 4,
+       "y": 8,
+       "w": 44,
+       "h": 32,
+       "value": 40,
+       "maximum": 100,
+       "color": 220,
+       "track": 244,
+       "bg": 17,
+       "name": "level_gauge"
+      },
+      {
+       "op": "slider",
+       "x": 30,
+       "y": 9,
+       "w": 35,
+       "h": 3,
+       "name": "level_slider",
+       "value": 40,
+       "maximum": 100,
+       "color": 220,
+       "track": 17,
+       "knob": 231,
+       "on_change": "level_changed"
+      },
+      {
+       "op": "bar",
+       "x": 60,
+       "y": 28,
+       "w": 70,
+       "h": 4,
+       "value": 40,
+       "maximum": 100,
+       "color": 220,
+       "track": 237,
+       "edge": 228,
+       "radius": 1,
+       "name": "level_meter"
+      },
+      {
+       "op": "put",
+       "name": "level_label",
+       "x": 30,
+       "y": 5,
+       "text": "OUTPUT: 40%",
+       "fg": 231,
+       "bg": 17
+      },
+      {
+       "op": "button",
+       "x": 30,
+       "y": 18,
+       "w": 18,
+       "h": 3,
+       "name": "reset_button",
+       "text": "Reset",
+       "color": 25,
+       "down": 18,
+       "rim": 32,
+       "fg": 231,
+       "radius": 2,
+       "scale": 0,
+       "on_click": "reset_level"
+      }
+     ]
+    }
+   ],
+   "pages": [
+    {
+     "id": "main",
+     "name": "Main"
+    }
+   ],
+   "initialPage": "main",
+   "tabs": {
+    "enabled": false,
+    "row": -1
+   }
+  }
+ ],
+ "handlers": {
+  "level_changed": {
+   "args": "slider",
+   "body": "value = slider.values[\"value\"]\nlevel_gauge.set(value=value)\nlevel_meter.set(value=value)\nlevel_label.set(text=\"OUTPUT: %d%%\" % value)"
+  },
+  "reset_level": {
+   "args": "button",
+   "body": "level_slider.set(value=0)\nlevel_changed(level_slider)"
+  }
+ },
+ "options": {
+  "embedDesign": true,
+  "keepUnusedHandlers": false
+ },
+ "knownNames": [],
+ "provenance": {
+  "createdWith": "0.3.0",
+  "lastEditedWith": "0.3.0"
+ },
+ "application": {
+  "version": "1.0.0"
+ }
+}
