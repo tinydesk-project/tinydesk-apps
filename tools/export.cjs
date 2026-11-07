@@ -14,6 +14,9 @@ const R = require(path.resolve(builder, 'resources.js'));
 const design = V.stamp(TD.parse(fs.readFileSync(input, 'utf8')));
 const check = TD.validate(design);
 if (check.errors.length) throw Error(check.errors.join('\n'));
-const source = TD.generate(design, {bundle: true});
+// The catalog serves boards with TinyDesk 0.2.x, which have no tdapp library:
+// keep the self-contained export (App Builder 0.13+ imports tdapp by
+// default). Set TDAPP_LIBRARY=1 once the catalog requires TinyDesk 0.3.
+const source = TD.generate(design, {bundle: true, embedRuntime: process.env.TDAPP_LIBRARY !== '1'});
 process.stdout.write(JSON.stringify({project: design, source,
                                      paths: [...R.required(design).values()]}));
