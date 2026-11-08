@@ -18,8 +18,8 @@ The catalog is published with GitHub Pages at
 
 ```
 apps/<id>/
-  app.json        the App Builder project: the source to edit
-  app.py          the Python App Builder generated from it (for reading)
+  app.json        the app's project: the source
+  app.py          the Python generated from it (for reading)
   store.json      title, summary and category shown in the Store
   <id>.tdapp      the package, built from app.json
   (pictures, modules)  files the project names
@@ -36,23 +36,19 @@ Categories: Examples, Tools, Games, Industrial, Education. The version is
 the project's `application.version` (x.y.z); raise it for every change, so
 boards offer the update.
 
-## Building and checking
+## Checking
 
-The packages are built with [TinyDesk App Builder](https://github.com/tinydesk-project/tinydesk-app-builder)'s
-own generator and package code, and `mpy-cross` 1.29 (TinyDesk's build
-makes one in `build*/compiler/mpy_cross/`). Node.js and Python 3 are
-needed:
+`make_index.py` needs only Python 3: it checks every package (format,
+every entry's SHA-256, that it matches `app.json`) and writes the site
+into `site/`. CI runs the check on every push and pull request, and
+publishes the site from `main`.
 
 ```bash
-python tools/build_apps.py --builder ../tinydesk-app-builder --compiler PATH/TO/mpy-cross
 python tools/make_index.py
 ```
 
-`build_apps.py` writes `app.py` and `<id>.tdapp` for every app (or the ids
-given); builds are deterministic. `make_index.py` needs only Python: it
-checks every package (format, every entry's SHA-256, that it matches
-`app.json`) and writes the site into `site/`. CI runs the check on every
-push and pull request, and publishes the site from `main`.
+The packages are built with TinyDesk's app tools and `mpy-cross` 1.29
+(`tools/build_apps.py`); the tools are published later.
 
 ## What a board checks
 
@@ -66,8 +62,7 @@ fetched over HTTPS.
 
 ## Adding an app
 
-Make it in App Builder, save the project as `apps/<id>/app.json`, add
-`store.json`, run the two commands above and open a pull request. Only
+New apps can be proposed once TinyDesk's app tools are published. Only
 apps whose sources are in this repository are accepted.
 
 ## Licence
