@@ -2,7 +2,7 @@
  "version": 1,
  "name": "mqtt_dashboard",
  "application": {
-  "version": "1.0.0"
+  "version": "1.0.1"
  },
  "board": 2000,
  "source": "main.py"

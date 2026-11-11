@@ -100,7 +100,7 @@ def row(t):
         text = '[%s]' % (text if v else '?')
     elif t.get('unit') and v:
         text += ' ' + t['unit']
-    return '%-16.16s %s' % (t['name'], text[:20])
+    return '%-16s %s' % (t['name'], text)   # too long for the list: it ends the row in an ellipsis
 
 
 def show_list():
@@ -132,7 +132,7 @@ def show_tile(lst_=None):
     else:
         for i in range(0, min(len(text), 24 * 7), 24):
             cv.put(0, 2 + i // 24, text[i:i + 24], 250)
-    topic_lbl.text = t['topic'][:63]
+    topic_lbl.text = t['topic']
     age_lbl.text = ('%d s ago' % (time.time() - v[1])) if v else 'no message yet'
 
 
@@ -269,12 +269,12 @@ def send(_=None):
         v = values.get(t['topic'])
         payload = 'OFF' if v and v[0].upper() == 'ON' else 'ON'
     else:
-        payload = tdui.inputbox('Send', 'Text to send on %s:' % t['topic'][:40])
+        payload = tdui.inputbox('Send', 'Text to send on %s:' % t['topic'])
         if payload is None:
             return
     try:
         client.publish(t['topic'], payload, retain=t['kind'] == 'switch')
-        status.text = 'Sent %s to %s' % (payload[:20], t['topic'][:30])
+        status.text = 'Sent %s to %s' % (payload, t['topic'])
     except Exception as e:
         status.text = 'Send failed: %s' % e
 
