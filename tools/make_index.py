@@ -28,6 +28,9 @@ catalog.txt (format 1):
   cells <n>                 canvas cells it needs (2000: every board)
   needs <cap> ...           tdui capabilities, if any
   cpu <arch>                native code for this CPU only, if any
+  author <text>             who made it, up to 40 bytes
+  repo <url>                where its source is (https://), up to 84 bytes
+  license <text>            its licence, e.g. MIT, up to 16 bytes
   end
 
 Lines are at most 200 bytes, UTF-8; unknown keys are ignored, so later
@@ -110,6 +113,9 @@ def entry(folder):
     if meta.get('category') not in CATEGORIES:
         raise Bad('category must be one of %s' % sorted(CATEGORIES))
     native = runtime.get('native')
+    repo = one_line(meta.get('repo'), 84, 'repo')
+    if not repo.startswith('https://') or ' ' in repo:
+        raise Bad('repo must be an https:// address')
     return {
         'id': app_id,
         'title': one_line(meta.get('title'), 40, 'title'),
@@ -125,6 +131,9 @@ def entry(folder):
         'needs': needs,
         'cpu': native['arch'] if native else None,
         'builder': manifest.get('studio'),
+        'author': one_line(meta.get('author'), 40, 'author'),
+        'repo': repo,
+        'license': one_line(meta.get('license'), 16, 'license'),
     }
 
 
@@ -138,6 +147,7 @@ def catalog_text(apps):
             lines.append('needs ' + ' '.join(a['needs']))
         if a['cpu']:
             lines.append('cpu ' + a['cpu'])
+        lines += ['author ' + a['author'], 'repo ' + a['repo'], 'license ' + a['license']]
         lines.append('end')
     for line in lines:
         assert len(line.encode()) <= 200, line
@@ -145,15 +155,15 @@ def catalog_text(apps):
 
 
 def page(apps):
-    rows = ''.join('<tr><td><a href="%s">%s</a></td><td>%s</td><td>%s</td><td>%d KB</td></tr>\n' % (
+    rows = ''.join('<tr><td><a href="%s">%s</a></td><td>%s</td><td>%s</td><td><a href="%s">%s</a> (%s)</td><td>%d KB</td></tr>\n' % (
         html.escape(a['file']), html.escape(a['title']), html.escape(a['version']), html.escape(a['summary']),
-        (a['size'] + 1023) // 1024) for a in apps)
+        html.escape(a['repo']), html.escape(a['author']), html.escape(a['license']), (a['size'] + 1023) // 1024) for a in apps)
     return ('<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>TinyDesk apps</title></head><body>\n<h1>TinyDesk apps</h1>\n'
             '<p>App packages for TinyDesk. Install them with the Store app on the board, '
             'or download one and run it with <code>py NAME.tdapp</code>.</p>\n'
-            '<table><tr><th>App</th><th>Version</th><th>What it is</th><th>Size</th></tr>\n%s</table>\n'
+            '<table><tr><th>App</th><th>Version</th><th>What it is</th><th>By</th><th>Size</th></tr>\n%s</table>\n'
             '</body></html>\n' % rows)
 
 

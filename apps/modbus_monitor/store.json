@@ -1,0 +1,8 @@
+{
+ "title": "Modbus Monitor",
+ "summary": "Watch up to 8 Modbus TCP or RTU values with bars and a trend, write registers and coils, log to CSV on the SD card.",
+ "category": "Industrial",
+ "author": "TinyDesk project",
+ "repo": "https://github.com/tinydesk-project/tinydesk-apps/tree/main/apps/modbus_monitor",
+ "license": "MIT"
+}

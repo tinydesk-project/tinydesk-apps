@@ -1,0 +1,9 @@
+{
+ "version": 1,
+ "name": "modbus_monitor",
+ "application": {
+  "version": "1.0.0"
+ },
+ "board": 2000,
+ "source": "main.py"
+}

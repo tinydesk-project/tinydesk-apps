@@ -9,6 +9,15 @@ apps/<id>/app.py (the generated source, for reading and review) and
 apps/<id>/<id>.tdapp. Resource files a project names are taken from its
 folder. Builds are deterministic: the same project, App Builder and
 mpy-cross give the same bytes.
+
+An app can also be handwritten Python. Its app.json is then a small
+project that names the source and its modules (<name>.py in its folder):
+
+  {"version": 1, "name": "<id>", "application": {"version": "1.0.0"},
+   "board": 2000, "source": "main.py", "modules": ["qr"]}
+
+These are compiled and packed with the same package code; no app.py is
+generated.
 """
 from pathlib import Path
 import argparse
@@ -32,6 +41,16 @@ def main():
     ids = args.ids or sorted(d.name for d in (ROOT / 'apps').iterdir() if (d / 'app.json').is_file())
     for app_id in ids:
         folder = ROOT / 'apps' / app_id
+        project = json.loads((folder / 'app.json').read_text(encoding='utf-8'))
+        if project.get('source'):
+            modules = {}
+            for name in project.get('modules', []):
+                if not (folder / (name + '.py')).is_file():
+                    sys.exit('%s: module %s is not in apps/%s' % (app_id, name, app_id))
+                modules[name + '.py'] = (folder / (name + '.py')).read_text(encoding='utf-8')
+            source = (folder / project['source']).read_text(encoding='utf-8')
+            write(folder, app_id, build(args.compiler, project, source, None, modules, None), inspect)
+            continue
         out = subprocess.run(['node', str(ROOT / 'tools' / 'export.cjs'), str(args.builder), str(folder / 'app.json')],
                              capture_output=True, text=True, encoding='utf-8')
         if out.returncode:
@@ -54,13 +73,16 @@ def main():
                 binaries[name + '.mpy'] = (folder / (name + '.mpy')).read_bytes()
             else:
                 sys.exit('%s: module %s is not in apps/%s' % (app_id, name, app_id))
-        data = build(args.compiler, project, export['source'], assets, modules, binaries)
-        inspect(data)
         (folder / 'app.py').write_text(export['source'], encoding='utf-8', newline='\n')
-        target = folder / (app_id + '.tdapp')
-        changed = not target.is_file() or target.read_bytes() != data
-        target.write_bytes(data)
-        print('%-20s %7d bytes%s' % (app_id, len(data), '' if changed else ' (unchanged)'))
+        write(folder, app_id, build(args.compiler, project, export['source'], assets, modules, binaries), inspect)
+
+
+def write(folder, app_id, data, inspect):
+    inspect(data)
+    target = folder / (app_id + '.tdapp')
+    changed = not target.is_file() or target.read_bytes() != data
+    target.write_bytes(data)
+    print('%-20s %7d bytes%s' % (app_id, len(data), '' if changed else ' (unchanged)'))
 
 
 if __name__ == '__main__':

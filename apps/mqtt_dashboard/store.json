@@ -1,0 +1,8 @@
+{
+ "title": "MQTT Dashboard",
+ "summary": "Tiles for MQTT topics: live values, switches that send ON / OFF and text senders, on the broker in ~/mqtt.conf.",
+ "category": "Industrial",
+ "author": "TinyDesk project",
+ "repo": "https://github.com/tinydesk-project/tinydesk-apps/tree/main/apps/mqtt_dashboard",
+ "license": "MIT"
+}

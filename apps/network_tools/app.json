@@ -1,0 +1,12 @@
+{
+ "version": 1,
+ "name": "network_tools",
+ "application": {
+  "version": "1.0.0"
+ },
+ "board": 2000,
+ "source": "main.py",
+ "modules": [
+  "qr"
+ ]
+}

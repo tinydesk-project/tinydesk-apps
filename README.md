@@ -20,21 +20,41 @@ The catalog is published with GitHub Pages at
 apps/<id>/
   app.json        the App Builder project: the source to edit
   app.py          the Python App Builder generated from it (for reading)
-  store.json      title, summary and category shown in the Store
+  store.json      what the Store shows: title, summary, category, author...
   <id>.tdapp      the package, built from app.json
   (pictures, modules)  files the project names
+```
+
+An app can also be written by hand in Python. Its `app.json` is then a
+small project naming the source and its modules (`<name>.py` next to it):
+
+```json
+{"version": 1, "name": "network_tools", "application": {"version": "1.0.0"},
+ "board": 2000, "source": "main.py", "modules": ["qr"]}
 ```
 
 `<id>` is the app's name in the Store and on the board: lowercase letters,
 digits, `_` and `-`, up to 31 characters. `store.json`:
 
 ```json
-{"title": "Device monitor", "summary": "One line, up to 160 bytes.", "category": "Examples"}
+{"title": "Network Tools", "summary": "One line, up to 160 bytes.", "category": "Tools",
+ "author": "TinyDesk project", "license": "MIT",
+ "repo": "https://github.com/tinydesk-project/tinydesk-apps/tree/main/apps/network_tools"}
 ```
 
-Categories: Examples, Tools, Games, Industrial, Education. The version is
+Categories: Examples, Tools, Games, Industrial, Education. `author` (up
+to 40 bytes), `license` (16) and `repo` (an `https://` address, 84) are
+required; the Store shows them with the app's details. The version is
 the project's `application.version` (x.y.z); raise it for every change, so
 boards offer the update.
+
+## The apps
+
+| App | What it does |
+| --- | --- |
+| MQTT Dashboard | Tiles for MQTT topics: live values, switches that send ON / OFF, text senders. Broker from `~/mqtt.conf`, tiles in `~/mqtt_dashboard.json`. |
+| Modbus Monitor | Up to 8 Modbus TCP or RTU values with bars and a trend; write registers and coils; CSV log on the SD card (or `~`). Points in `~/modbus_monitor.json`. |
+| Network Tools | Wi-Fi scan, the access point with a QR code phones scan to join it, ping, TCP port check. `tools/check_qr.py` checks its QR encoder against segno. |
 
 ## Building and checking
 
@@ -66,8 +86,8 @@ fetched over HTTPS.
 
 ## Adding an app
 
-Make it in App Builder, save the project as `apps/<id>/app.json`, add
-`store.json`, run the two commands above and open a pull request. Only
+Make it in App Builder and save the project as `apps/<id>/app.json`, or
+write it by hand as above; add `store.json`, run the two commands above and open a pull request. Only
 apps whose sources are in this repository are accepted.
 
 ## Licence

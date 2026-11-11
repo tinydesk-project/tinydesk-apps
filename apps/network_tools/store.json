@@ -1,0 +1,8 @@
+{
+ "title": "Network Tools",
+ "summary": "Wi-Fi scan, the access point with a QR code to join it, ping and a TCP port check.",
+ "category": "Tools",
+ "author": "TinyDesk project",
+ "repo": "https://github.com/tinydesk-project/tinydesk-apps/tree/main/apps/network_tools",
+ "license": "MIT"
+}
